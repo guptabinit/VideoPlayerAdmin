@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:video_player_admin/resources/firestore_methods.dart';
 import 'package:video_player_admin/views/add_screen.dart';
+import 'package:video_player_admin/widgets/card_widget.dart';
 import 'package:video_player_admin/widgets/custom_button.dart';
 import 'package:video_player_admin/widgets/text_field.dart';
 
@@ -59,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .where('uid', isEqualTo: FirestoreMethods().curUser)
+                  .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
@@ -71,9 +73,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
+                print("${snapshot.data!.docs[0]['videos'].length}");
+
                 var snap = snapshot.data!.docs[0]['videos'];
 
-                return Text("Test ${snap[0]['title']}");
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snap.length,
+                    itemBuilder: (BuildContext context, index) {
+                      return CardWidget(snap: snap[index],);
+                    },
+                  ),
+                );
               },
             ),
           ],
