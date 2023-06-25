@@ -36,7 +36,6 @@ class AuthMethods {
         model.User user = model.User(
           uid: cred.user!.uid,
           email: email,
-          videos: [],
         );
 
         await _firestore
@@ -69,7 +68,6 @@ class AuthMethods {
         model.User user = model.User(
           uid: cred.user!.uid,
           email: email,
-          videos: [],
         );
 
         await _firestore
