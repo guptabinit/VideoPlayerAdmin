@@ -57,18 +57,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             16.heightBox,
             StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('users').where('uid', isEqualTo: FirestoreMethods().curUser).snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.redAccent,
-                      ),
-                    );
-                  }
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('uid', isEqualTo: FirestoreMethods().curUser)
+                  .snapshots(),
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.redAccent,
+                    ),
+                  );
+                }
 
-                  return const Text("Test Text");
-                },
+                var snap = snapshot.data!.docs[0]['videos'];
+
+                return Text("Test ${snap[0]['title']}");
+              },
             ),
           ],
         ),
